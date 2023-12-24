@@ -5,7 +5,7 @@ import joblib
 import pandas as pd
 
 
-@hydra.main(version_base=None, config_path="configs", config_name="configs")
+@hydra.main(version_base=None, config_path="configs", config_name="config")
 def run_inference(cfg):
     # Load model
     model = joblib.load(cfg.model_path)
