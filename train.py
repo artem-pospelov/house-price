@@ -32,13 +32,11 @@ def train_model(cfg: DictConfig):
     # Save model
     joblib.dump(model, cfg.model_path)
 
-    return y_pred
-
-
-def metrics(y_train, y_pred):
     mse = mean_squared_error(y_train, y_pred)
     mae = mean_absolute_error(y_train, y_pred)
     mape = mean_absolute_percentage_error(y_train, y_pred)
+
+    y_train = pd.read_csv("y_train.csv")
 
     metrics_names = ["mse", "mae", "mape"]
     meitrics = [mse, mae, mape]
@@ -54,8 +52,7 @@ if __name__ == "__main__":
     os.system("dvc fetch X_train.csv")
     os.system("dvc fetch y_train.csv")
     os.system("dvc pull --remote myremote")
-    y_pred = train_model()
-    y_train = pd.read_csv("y_train.csv")
-    metrics(y_train, y_pred)
+    train_model()
     os.system("dvc add model.joblib")
     os.system("dvc push model.joblib.dvc")
+
