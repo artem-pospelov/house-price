@@ -44,7 +44,7 @@ def train_model(cfg: DictConfig):
     return {"MSE": mse, "MAE": mae, "RMSE": rmse}
 
 
-if name == "__main__":
+if __name__ == "__main__":
     sw = SummaryWriter("exp_logs")
     os.system("dvc fetch X_train.csv")
     os.system("dvc fetch y_train.csv")
