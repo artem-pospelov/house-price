@@ -2,52 +2,60 @@ import os
 
 import hydra
 import joblib
-import numpy as np
 import pandas as pd
 from omegaconf import DictConfig
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error
-from torch.utils.tensorboard import SummaryWriter
+from sklearn.model_selection import train_test_split
 
+
+def open_data(path, y_column):
+    df = pd.read_csv(path)
+    features = df.drop(columns=[y_column], axis=1)
+    target = df[y_column]
+
+    return features, target
+
+def split_data(features, target, test_size, random_state, X_save, y_save):
+    X_train, X_test, y_train, y_test = train_test_split(
+        features, target, test_size=test_size, random_state=random_state
+        )
+    X_test_df = pd.DataFrame(X_test)
+    X_test_df.to_csv(X_save, index=False)
+    y_test_df = pd.DataFrame(y_test)
+    y_test_df.to_csv(y_save, index=False)
+    
+    return X_train, X_test, y_train, y_test
 
 @hydra.main(version_base=None, config_path="configs", config_name="config")
 def train_model(cfg: DictConfig):
     # Load data
-    X_train = pd.read_csv(cfg.X_train_path)
-    y_train = pd.read_csv(cfg.X_train_path)
+    features, target = open_data(cfg.paths.data, cfg.preparation.y_column)
+    X_train, X_test, y_train, y_test = split_data(
+        features, target, 
+        cfg.preparation.test_size, 
+        cfg.preparation.random_state,
+        cfg.paths.X_test,
+        cfg.paths.y_test
+        )
 
     # Train model
     model = RandomForestRegressor(
-        n_estimators=cfg.n_estimators,
-        max_depth=cfg.max_depth,
-        min_samples_split=cfg.min_samples_split,
-        min_samples_leaf=cfg.min_samples_leaf,
+        n_estimators=cfg.model_parameters.n_estimators,
+        max_depth=cfg.model_parameters.max_depth,
+        min_samples_split=cfg.model_parameters.min_samples_split,
+        min_samples_leaf=cfg.model_parameters.min_samples_leaf,
     )
     model.fit(X_train, y_train)
     y_pred = model.predict(X_train)
 
     # Save model
-    joblib.dump(model, cfg.model_path)
+    joblib.dump(model, cfg.paths.model)
 
-    mse = mean_squared_error(y_train, y_pred)
-    mae = mean_absolute_error(y_train, y_pred)
-    rmse = np.sqrt(mse)
-
-    y_train = pd.read_csv("y_train.csv")
-
-    metrics_names = ["mse", "mae", "rmse"]
-    meitrics = [mse, mae, rmse]
-
-    for metric, name in zip(meitrics, metrics_names):
-        sw.add_scalar(name, metric, global_step=0)
-
-    return {"MSE": mse, "MAE": mae, "RMSE": rmse}
+    return model
 
 
 if __name__ == "__main__":
-    sw = SummaryWriter("exp_logs")
-    os.system("dvc fetch X_train.csv")
-    os.system("dvc fetch y_train.csv")
+    os.system("dvc fetch data/data.csv")
     os.system("dvc pull --remote myremote")
     train_model()
     os.system("dvc add model.joblib")

@@ -163,3 +163,4 @@ cython_debug/
 /y_train.csv
 /y_test.csv
 /model.joblib
+/predicted.csv

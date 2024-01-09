@@ -1,9 +1,14 @@
-n_estimators: 100
-max_depth: 10
-min_samples_split: 2
-min_samples_leaf: 1
-model_path: 'model.joblib'
-X_train_path: 'X_train.csv'
-y_train_path: 'y_train.csv'
-X_test_path: 'X_test.csv'
-predicted_path: "predicted.csv"
+preparation:
+  y_column: 'Price'
+  test_size: 0.3
+  random_state: 42
+model_parameters:
+  n_estimators: 100
+  max_depth: 10
+  min_samples_split: 2
+  min_samples_leaf: 1
+paths:
+  data: 'data/data.csv'
+  X_test: 'data/X_test.csv'
+  y_test: 'data/y_test.csv'
+  model: 'model.joblib'
