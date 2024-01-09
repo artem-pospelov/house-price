@@ -51,7 +51,7 @@ def train_model(cfg: DictConfig):
     # Save model
     joblib.dump(model, cfg.paths.model)
 
-    return model
+    return y_pred
 
 
 if __name__ == "__main__":
