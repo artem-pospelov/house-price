@@ -3,14 +3,9 @@ House price prediction project
 
 ## Initial configuration
 **For usage:**  
-```
-pip install miniconda
-python -m venv house_prices
-cd house_prices
-```
 - clone the repository
 ```
-cd house-prices
+python -m venv house_prices
 poetry install
 pre-commit install
 pre-commit run -a
