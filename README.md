@@ -1,4 +1,4 @@
-# mlops_house_price
+# house-price
 House price prediction project
 
 ## Initial configuration
