@@ -8,10 +8,10 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
 
-def open_data(path, y_column):
+def open_data(path, target):
     df = pd.read_csv(path)
-    features = df.drop(columns=[y_column], axis=1)
-    target = df[y_column]
+    features = df.drop(columns=[target], axis=1)
+    target = df[target]
 
     return features, target
 
