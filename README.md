@@ -1,22 +1,21 @@
 # house-price
-House price prediction project
+Проект предсказания стоимости дома
 
-## Initial configuration
-**For usage:**  
-- clone the repository
+## Для использования
+- склонируйте этот репозиторий
+- создайте и активируйте новое виртуальное окружение
 ```
-python -m venv house_prices
+conda create -n mlops_project
+conda activate mlops_project
+```
+```
 poetry install
 pre-commit install
 pre-commit run -a
 ```
 
-## Train model
+## Далее воспроизведите код для тренировки или тестирования модели
 ```
 python train.py
-```
-
-## Predict on test
-```
 python infer.py
 ```
